@@ -4,13 +4,15 @@
 using namespace std;
 
 
-struct Cliente{
+class Cliente{
+    public:
     int exist = 1;
+    
     int potato = 0;
     int apple = 0;
     int rice = 0;
     Cliente(){
-            cout << "cliente ja existente" << endl;
+            cout << "cliente entrando" << endl;
 
     }
     ~Cliente(){
@@ -22,13 +24,40 @@ struct Cliente{
 };
 
 
-struct Loja{
+class Loja{
+    public:
+    Cliente * um_cara {nullptr};
     int potato = 0;
     int apple = 0;
     int rice = 0;
     int money = 10;
 
+    int criar_cliente(){
+		if(um_cara != nullptr){
+        	cout << "cliete ja existente" << endl;
+        }
+        else{
+            this->um_cara = new Cliente();
+        }
+	    return 0;
+    }
+    bool deletar_cliente(){
+	    if(um_cara != nullptr){
+            delete um_cara;
+            return true;
+		}
+        else{
+                cout << "sem cliente" << endl;
+                return false;
+        }
+    }
+
     bool sell_potato(){
+		if(um_cara == nullptr){
+        	cout << "cliente nao existente" << endl;
+			return false;
+        }
+
         if(this->potato > 0){
             this->potato -= 1;
             this->money += 3;
@@ -40,6 +69,10 @@ struct Loja{
     }
 
     bool sell_apple(){
+	if(um_cara == nullptr){
+        	cout << "cliente nao existente" << endl;
+		return false;
+        }
         if(this->apple > 0){
             this->apple -= 1;
             this->money += 2;
@@ -51,6 +84,10 @@ struct Loja{
     }
 
     bool sell_rice(){
+	if(um_cara == nullptr){
+        	cout << "cliente nao existente" << endl;
+		return false;
+        }
         if(this->rice > 0){
             this->rice -= 1;
             this->money += 1;
@@ -97,8 +134,7 @@ struct Loja{
 
 int main(){
     Loja * dubom  = new Loja();
-    Cliente * um_cara = new Cliente();
-    string op , tipo;
+    //string op , tipo;
     while(1){
         string line; 
 
@@ -114,57 +150,52 @@ int main(){
         stringstream ss(line);
 
         // ss >> op >> nome;
-
+        string cmd; 
         cout << "\n";
-
-        if(um_cara == nullptr){
-            cout << "tem ngm!!";
+        ss >> cmd;
+        if(cmd == "potato"){
+            if(dubom->sell_potato())
+                dubom->um_cara->potato += 1;
         }
-
-        if(line == "potato"){
-            dubom->sell_potato();
-            um_cara->potato += 1;
+        else if(cmd == "apple"){
+            if(dubom->sell_apple())
+                dubom->um_cara->apple += 1;
         }
-        else if(line == "apple"){
-            dubom->sell_apple();
-            um_cara->apple += 1;
+        else if(cmd == "rice"){
+            if(dubom->sell_rice())
+                dubom->um_cara->apple += 1;
         }
-        else if(line == "rice"){
-            dubom->sell_rice();
-            um_cara->apple += 1;
-        }
-        else if(line == "buy_potato"){
+        else if(cmd == "buy_potato"){
             dubom->buy_potato();
         }
-        else if(line == "buy_apple"){
+        else if(cmd == "buy_apple"){
             dubom->buy_apple();
         }
-        else if(line == "buy_rice"){
+        else if(cmd == "buy_rice"){
             dubom->buy_rice();
         }
-        else if(line == "exit"){
+        else if(cmd == "exit"){
         	return 0;
         }
-        else if(line == "cliente"){
-            if(um_cara->exist == 1){
-                cout << "cliente ja existente" << endl;
-            }
-            else{
-                Cliente * um_cara = new Cliente();
-            }
+        else if(cmd == "cliente"){
+            
+			dubom->criar_cliente();
+
+
+
+
+
         }
-        else if(line == "saida"){
-            if(um_cara->exist == 1)
-            delete um_cara;
-            else{
-                cout << "sem cliente" << endl;
-            }
+        else if(cmd == "saida"){
+
+			dubom->deletar_cliente();
         }
         else{
         	cout << "comando invalido";
         }        
         cout << "\n";
 
-    }
+        }
+    delete dubom;  
     return 0;
 }
