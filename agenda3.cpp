@@ -70,7 +70,12 @@ public:
     }
 
     void tostring(){
-        cout << "- " << getName();
+        if(favorito){
+            cout << "* " << getName();
+        }
+        else{
+            cout << "- " << getName();
+        }
         if(getFones().empty())
             cout << " ";
         for(size_t i = 0; i < fones.size();i++)
@@ -126,15 +131,22 @@ class Agenda{
 
     }
     void rmcontato(string name){
-        for(int i = 0; i < (int) agenda_lista.size(); i++){
-            if( name == agenda_lista[i]->getName()){
-                delete agenda_lista[i];
-                agenda_lista.erase(agenda_lista.begin()+i);
+            for(int i = 0; i < (int) agenda_lista.size(); i++){
+                if( name == agenda_lista[i]->getName()){
+
+                    for(int j = 0; j < (int) agenda_fav.size(); j++){
+                        if( name == agenda_fav[j]->getName()){
+                            agenda_fav.erase(agenda_fav.begin()+i);
+                            break;
+                        }
+                    }
+                    delete agenda_lista[i];
+                    agenda_lista.erase(agenda_lista.begin()+i);
                 return;
+                }
             }
+            cout << "ERRO: contato nao encontrado" << endl;
         }
-        cout << "ERRO: contato nao encontrado" << endl;
-    }
 
     void buscar(string name){
         bool cont = false;
@@ -210,6 +222,7 @@ class Agenda{
     bool rm_fav(string name){
         for(int i = 0; i < (int) agenda_fav.size(); i++){
             if( name == agenda_fav[i]->getName()){
+                agenda_fav[i]->favorito = false;
                 agenda_fav.erase(agenda_fav.begin()+i);
                 return true;
             }
